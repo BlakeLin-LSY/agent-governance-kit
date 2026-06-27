@@ -10,6 +10,9 @@
 > [`docs/demo-output.md`](docs/demo-output.md) (real captured output) ·
 > walkthrough: [`docs/DEMO.md`](docs/DEMO.md)
 
+**▶ 20-second demo** — the gate goes green, then **red (exit 1)** when a render drifts, then
+recovers: [![guard.sh red→green demo](https://asciinema.org/a/7sZB67Hd9MPdyL2r.svg)](https://asciinema.org/a/7sZB67Hd9MPdyL2r)
+
 The interesting engineering in an autonomous agent system isn't the LLM calls.
 It's the **governance**: how do you make a multi-channel memory system that
 **doesn't lie to you, doesn't lose your data, and stays lean** — without a human
