@@ -2,3 +2,7 @@
 *.log
 __pycache__/
 *.pyc
+
+# asciinema recording byproducts (the README embeds an asciinema.org link, not a tracked file)
+*.cast
+guard-demo.gif
