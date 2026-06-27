@@ -1,0 +1,23 @@
+name: governance-guard
+# The CI mirror of the local pre-commit hooks. This is the "trusted third party"
+# that local hooks can't be: a contributor can `git commit --no-verify`, but they
+# can't bypass this. codified ≠ enforced → enforce it here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # guard.sh's memory-integrity check compares against HEAD
+      - name: Run the deterministic guard suite (zero-LLM)
+        run: bash governance/guard.sh
+      - name: Run the structural pre-commit checks
+        run: |
+          MEMORY_PATH=memory/memory.example.md bash governance/hooks/check-memory-integrity.sh
+          bash governance/hooks/check-skill-count.sh

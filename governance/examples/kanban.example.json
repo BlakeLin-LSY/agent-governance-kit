@@ -1,0 +1,11 @@
+{
+  "_comment": "Synthetic example. SSOT for task state. KANBAN.md is GENERATED from this file by manage-kanban.sh --render; never hand-edit the render. The guard suite checks that the render matches this source and that no 'shipped' task is left unchecked.",
+  "updated": "2026-02-12",
+  "columns": ["backlog", "in_progress", "done"],
+  "tasks": [
+    { "id": "T-001", "title": "Ship zero-LLM guard suite", "status": "done", "shipped": true, "priority": "High" },
+    { "id": "T-002", "title": "Human-gated memory promotion", "status": "done", "shipped": true, "priority": "High" },
+    { "id": "T-003", "title": "Structural pre-commit enforcement", "status": "in_progress", "shipped": false, "priority": "Med" },
+    { "id": "T-004", "title": "CI mirror of guard suite", "status": "backlog", "shipped": false, "priority": "Med" }
+  ]
+}

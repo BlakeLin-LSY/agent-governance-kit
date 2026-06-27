@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# pre-commit — structural enforcement at commit time.
+#
+# The core thesis of this kit: **codified ≠ enforced.** A rule written in a doc
+# decays; a rule wired here cannot be skipped by accident. Activate with:
+#
+#     git config core.hooksPath governance/hooks
+#
+# ...so the whole team gets the same gate with no per-clone install step.
+#
+# HONEST BOUNDARY: a local hook is the *fast dev-loop*, not absolute enforcement
+# — `git commit --no-verify` bypasses it. Real enforcement needs a trusted third
+# party: the SAME checks run in CI (see .github/workflows/guard.yml). Local hook
+# = fast feedback; CI = the gate that can't be skipped.
+#
+# Each check is independent and exit-code-driven; the first FAIL blocks the commit.
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+fail=0
+run() {  # run <label> <cmd...>
+  local label="$1"; shift
+  if "$@"; then
+    printf '  ✓ %s\n' "$label"
+  else
+    printf '  ✗ %s — commit blocked\n' "$label"
+    fail=1
+  fi
+}
+
+echo "pre-commit · structural governance gate"
+
+# 1. memory.md must stay append-only + under cap (the integrity invariant).
+run "memory integrity" env MEMORY_PATH="memory/memory.example.md" \
+    bash governance/hooks/check-memory-integrity.sh
+
+# 2. KANBAN.md is a generated render — block direct edits to the source-of-truth render.
+run "kanban render is read-only" bash governance/hooks/check-kanban-direct-edit.sh
+
+# 3. stated skill counts must match disk (a count can't drift from reality).
+run "skill-count consistency" bash governance/hooks/check-skill-count.sh
+
+if [ "$fail" -ne 0 ]; then
+  echo ""
+  echo "Commit blocked by governance gate. Fix the ✗ items above."
+  echo "(Override for an audited emergency only: git commit --no-verify)"
+  exit 1
+fi
+echo "governance gate: clean"
+exit 0
